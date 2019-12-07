@@ -1,14 +1,3 @@
-# => Build container
-FROM node:alpine as builder
-WORKDIR /app
-COPY .env .
-COPY env.sh .
-COPY package.json .
-COPY yarn.lock .
-RUN yarn
-COPY . .
-RUN yarn build
-
 # => Run container
 FROM nginx:alpine
 
@@ -17,7 +6,7 @@ RUN rm -rf /etc/nginx/conf.d
 COPY nginx /etc/nginx
 
 # Static build
-COPY --from=builder /app/build /usr/share/nginx/html/
+COPY build /usr/share/nginx/html/
 
 # Default port exposure
 EXPOSE 80
